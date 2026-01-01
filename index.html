@@ -3,293 +3,418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>چرخه آب - درس تعاملی برای پایه سوم</title>
+    <title>آموزش تعاملی چرخه آب - کلاس سوم</title>
     <style>
+        :root {
+            --primary-blue: #3498db;
+            --water-color: #5dade2;
+            --sun-color: #f1c40f;
+            --cloud-color: #ecf0f1;
+            --grass-color: #27ae60;
+            --dark-blue: #2c3e50;
+        }
+
+        @font-face {
+            font-family: 'Tahoma';
+        }
+
         body {
             font-family: 'Tahoma', sans-serif;
-            background-color: #e0f7fa;
-            color: #01579b;
+            background-color: #e3f2fd;
             margin: 0;
+            padding: 0;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-        h1, h2 {
-            color: #ff5722;
-        }
-        .section {
-            margin: 20px 0;
+
+        header {
+            background-color: var(--primary-blue);
+            color: white;
             padding: 20px;
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 800px;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
         }
-        .animation-container {
+
+        /* Water Cycle Animation Area */
+        .animation-box {
             position: relative;
-            width: 300px;
-            height: 200px;
-            margin: 20px auto;
-            background-color: #81d4fa;
-            border: 2px solid #0288d1;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .sea {
-            position: absolute;
-            bottom: 0;
             width: 100%;
-            height: 50px;
-            background-color: #0277bd;
-            animation: wave 2s infinite alternate;
+            height: 400px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 70%, #27ae60 70%, #27ae60 75%, #2980b9 75%);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 5px solid white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-        @keyframes wave {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-5px); }
-        }
-        .vapor {
-            position: absolute;
-            bottom: 50px;
-            width: 10px;
-            height: 10px;
-            background-color: #ffffff;
-            border-radius: 50%;
-            opacity: 0.7;
-            animation: evaporate 3s infinite;
-        }
-        .vapor:nth-child(2) { left: 50px; animation-delay: 0.5s; }
-        .vapor:nth-child(3) { left: 100px; animation-delay: 1s; }
-        .vapor:nth-child(4) { left: 150px; animation-delay: 1.5s; }
-        .vapor:nth-child(5) { left: 200px; animation-delay: 2s; }
-        @keyframes evaporate {
-            0% { transform: translateY(0); opacity: 0.7; }
-            100% { transform: translateY(-150px); opacity: 0; }
-        }
-        .cloud {
+
+        .sun {
             position: absolute;
             top: 20px;
-            left: 100px;
-            width: 100px;
-            height: 50px;
-            background-color: #ffffff;
-            border-radius: 50px;
-            opacity: 0;
-            transition: opacity 1s;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--sun-color);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--sun-color);
+            z-index: 10;
         }
-        .cloud.active { opacity: 1; }
-        .rain {
+
+        .cloud {
             position: absolute;
-            top: 70px;
+            width: 100px;
+            height: 40px;
+            background: var(--cloud-color);
+            border-radius: 50px;
+            top: 60px;
+            left: -150px;
+            opacity: 0.9;
+            transition: all 1s ease;
+        }
+        .cloud::after, .cloud::before {
+            content: '';
+            position: absolute;
+            background: var(--cloud-color);
+            border-radius: 50%;
+        }
+        .cloud::after { width: 50px; height: 50px; top: -25px; left: 15px; }
+        .cloud::before { width: 40px; height: 40px; top: -15px; left: 45px; }
+
+        .vapor {
+            position: absolute;
+            bottom: 25%;
             width: 2px;
-            height: 10px;
-            background-color: #0288d1;
-            opacity: 0;
-            animation: raindrop 1s infinite;
-        }
-        .rain:nth-child(1) { left: 120px; animation-delay: 0s; }
-        .rain:nth-child(2) { left: 140px; animation-delay: 0.2s; }
-        .rain:nth-child(3) { left: 160px; animation-delay: 0.4s; }
-        @keyframes raindrop {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(100px); opacity: 0; }
-        }
-        button {
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #388e3c;
-        }
-        .quiz-question {
+            height: 20px;
+            background: rgba(255,255,255,0.6);
             display: none;
         }
-        .quiz-question.active {
-            display: block;
+
+        .rain-drop {
+            position: absolute;
+            width: 2px;
+            height: 10px;
+            background: var(--primary-blue);
+            display: none;
         }
-        .option {
-            background-color: #ffeb3b;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
+
+        /* Interactive Buttons */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
             cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            font-family: inherit;
+            font-weight: bold;
         }
-        .option:hover {
-            background-color: #fdd835;
+
+        .btn-step { background-color: white; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
+        .btn-step.active { background-color: var(--primary-blue); color: white; }
+        .btn-step:hover { transform: scale(1.05); }
+
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            min-height: 80px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-right: 5px solid var(--primary-blue);
         }
-        .feedback {
-            font-size: 18px;
-            margin: 10px;
+
+        /* Quiz Section */
+        #quiz-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 40px;
+            display: none;
         }
-        .stars {
-            font-size: 30px;
-            color: #ffeb3b;
+
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--dark-blue);
         }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            text-align: right;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .option-btn:hover { background: #e9ecef; }
+        .option-btn.correct { background: #d4edda; border-color: #28a745; }
+        .option-btn.wrong { background: #f8d7da; border-color: #dc3545; }
+
+        .star-rating {
+            font-size: 40px;
+            color: #ddd;
+            margin: 15px 0;
+        }
+        .star-rating .filled { color: var(--sun-color); }
+
+        #reset-btn { background-color: #e67e22; color: white; margin-top: 20px; }
+
+        /* Responsive */
         @media (max-width: 600px) {
-            .animation-container {
-                width: 100%;
-                height: 150px;
-            }
-            button {
-                width: 100%;
-                margin: 5px 0;
-            }
+            .animation-box { height: 300px; }
+            button { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="section">
-        <h1>چرخه آب</h1>
-        <p>سلام بچه‌ها! امروز می‌خواهیم درباره چرخه آب یاد بگیریم. آب از دریا تبخیر می‌شود، ابرها تشکیل می‌شوند و بعد باران می‌بارد!</p>
+
+<div class="container">
+    <header>
+        <h1>💧 سفر شگفت‌انگیز آب</h1>
+        <p>بیا با هم یاد بگیریم چطور آب از زمین به آسمان می‌رود و برمی‌گردد!</p>
+    </header>
+
+    <div class="animation-box" id="scene">
+        <div class="sun"></div>
+        <div id="cloud1" class="cloud"></div>
+        <div id="cloud2" class="cloud" style="top: 100px; left: -200px; transform: scale(0.8);"></div>
+        <!-- Sea will be represented by the background CSS -->
     </div>
 
-    <div class="section">
-        <h2>انیمیشن چرخه آب</h2>
-        <div class="animation-container">
-            <div class="sea"></div>
-            <div class="vapor"></div>
-            <div class="vapor"></div>
-            <div class="vapor"></div>
-            <div class="vapor"></div>
-            <div class="vapor"></div>
-            <div id="cloud" class="cloud"></div>
-            <div id="rain1" class="rain"></div>
-            <div id="rain2" class="rain"></div>
-            <div id="rain3" class="rain"></div>
-        </div>
-        <button onclick="showEvaporation()">تبخیر</button>
-        <button onclick="showCloud()">تشکیل ابر</button>
-        <button onclick="showRain()">بارش</button>
+    <div class="controls">
+        <button class="btn-step" onclick="startStep(1)" id="step1">۱. تبخیر</button>
+        <button class="btn-step" onclick="startStep(2)" id="step2">۲. تشکیل ابر</button>
+        <button class="btn-step" onclick="startStep(3)" id="step3">۳. بارش</button>
+        <button onclick="showQuiz()" style="background: #9b59b6; color: white;">📝 شروع آزمون</button>
     </div>
 
-    <div class="section" id="quiz-section">
-        <h2>کوییز: حالا امتحان کنیم!</h2>
-        <div id="question1" class="quiz-question active">
-            <p>سؤال ۱: آب از کجا تبخیر می‌شود؟</p>
-            <div class="option" onclick="checkAnswer(1, 'دریا', 'دریا')">دریا</div>
-            <div class="option" onclick="checkAnswer(1, 'دریا', 'آسمان')">آسمان</div>
-            <div class="option" onclick="checkAnswer(1, 'دریا', 'ابر')">ابر</div>
-            <div id="feedback1" class="feedback"></div>
-        </div>
-        <div id="question2" class="quiz-question">
-            <p>سؤال ۲: ابرها چگونه تشکیل می‌شوند؟</p>
-            <div class="option" onclick="checkAnswer(2, 'از تبخیر آب', 'از باد')">از باد</div>
-            <div class="option" onclick="checkAnswer(2, 'از تبخیر آب', 'از تبخیر آب')">از تبخیر آب</div>
-            <div class="option" onclick="checkAnswer(2, 'از تبخیر آب', 'از باران')">از باران</div>
-            <div id="feedback2" class="feedback"></div>
-        </div>
-        <div id="question3" class="quiz-question">
-            <p>سؤال ۳: بعد از تشکیل ابر چه اتفاقی می‌افتد؟</p>
-            <div class="option" onclick="checkAnswer(3, 'بارش', 'تبخیر')">تبخیر</div>
-            <div class="option" onclick="checkAnswer(3, 'بارش', 'بارش')">بارش</div>
-            <div class="option" onclick="checkAnswer(3, 'بارش', 'ذوب شدن')">ذوب شدن</div>
-            <div id="feedback3" class="feedback"></div>
-        </div>
-        <div id="question4" class="quiz-question">
-            <p>سؤال ۴: چرخه آب چند بار تکرار می‌شود؟</p>
-            <div class="option" onclick="checkAnswer(4, 'همیشه تکرار می‌شود', 'یک بار')">یک بار</div>
-            <div class="option" onclick="checkAnswer(4, 'همیشه تکرار می‌شود', 'دو بار')">دو بار</div>
-            <div class="option" onclick="checkAnswer(4, 'همیشه تکرار می‌شود', 'همیشه تکرار می‌شود')">همیشه تکرار می‌شود</div>
-            <div id="feedback4" class="feedback"></div>
-        </div>
-        <div id="question5" class="quiz-question">
-            <p>سؤال ۵: باران کجا می‌ریزد؟</p>
-            <div class="option" onclick="checkAnswer(5, 'به زمین و دریا', 'فقط به آسمان')">فقط به آسمان</div>
-            <div class="option" onclick="checkAnswer(5, 'به زمین و دریا', 'به زمین و دریا')">به زمین و دریا</div>
-            <div class="option" onclick="checkAnswer(5, 'به زمین و دریا', 'فقط به ابر')">فقط به ابر</div>
-            <div id="feedback5" class="feedback"></div>
-        </div>
-        <div id="score" class="stars"></div>
-        <button id="nextBtn" onclick="nextQuestion()" style="display: none;">سؤال بعدی</button>
-        <button id="resetBtn" onclick="resetQuiz()" style="display: none;">شروع دوباره</button>
+    <div id="info-text" class="info-card">
+        روی مرحله اول کلیک کن تا سفر آب شروع بشه!
     </div>
 
-    <script>
-        let currentQuestion = 1;
-        let score = 0;
-        const totalQuestions = 5;
+    <div id="quiz-section">
+        <div id="quiz-content">
+            <div class="question" id="q-text"></div>
+            <div class="options" id="q-options"></div>
+        </div>
+        <div id="result-area" style="display:none;">
+            <h2>نتیجه آزمون شما</h2>
+            <div id="stars" class="star-rating"></div>
+            <p id="score-text"></p>
+            <button id="reset-btn" onclick="resetAll()">دوباره شروع کنیم!</button>
+        </div>
+    </div>
+</div>
 
-        function showEvaporation() {
-            const vapors = document.querySelectorAll('.vapor');
-            vapors.forEach(v => v.style.animation = 'evaporate 3s infinite');
-            document.getElementById('cloud').classList.remove('active');
-            document.querySelectorAll('.rain').forEach(r => r.style.opacity = 0);
+<script>
+    // --- Audio Logic (Web Audio API) ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(isCorrect) {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        if (isCorrect) {
+            oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+            oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        } else {
+            oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
         }
+        
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.3);
+    }
 
-        function showCloud() {
-            document.getElementById('cloud').classList.add('active');
-            const vapors = document.querySelectorAll('.vapor');
-            vapors.forEach(v => v.style.animation = 'none');
-            document.querySelectorAll('.rain').forEach(r => r.style.opacity = 0);
+    // --- Animation Logic ---
+    const infoText = document.getElementById('info-text');
+    const scene = document.getElementById('scene');
+    let rainInterval;
+
+    function startStep(step) {
+        // Clear previous animations
+        stopRain();
+        document.querySelectorAll('.vapor').forEach(v => v.remove());
+        document.querySelectorAll('.btn-step').forEach(b => b.classList.remove('active'));
+        document.getElementById('step' + step).classList.add('active');
+
+        if (step === 1) {
+            infoText.innerHTML = "<strong>تبخیر:</strong> خورشید مهربان آب دریاها را گرم می‌کند و آب به شکل بخار به آسمان می‌رود.";
+            for(let i=0; i<15; i++) {
+                createVapor();
+            }
+        } else if (step === 2) {
+            infoText.innerHTML = "<strong>تشکیل ابر (میعان):</strong> بخار آب در بالای آسمان سرد می‌شود و ذره‌های ریز آب ابرها را می‌سازند.";
+            document.getElementById('cloud1').style.left = '100px';
+            document.getElementById('cloud2').style.left = '300px';
+        } else if (step === 3) {
+            infoText.innerHTML = "<strong>بارش:</strong> وقتی ابرها سنگین می‌شوند، آب به شکل باران یا برف دوباره به زمین برمی‌گردد.";
+            startRain();
         }
+    }
 
-        function showRain() {
-            document.getElementById('cloud').classList.add('active');
-            document.querySelectorAll('.rain').forEach(r => r.style.opacity = 1);
-        }
-
-        function checkAnswer(question, correct, selected) {
-            const feedback = document.getElementById(`feedback${question}`);
-            if (selected === correct) {
-                feedback.textContent = 'درست است! 😊';
-                feedback.style.color = 'green';
-                score++;
-                playBeep();
+    function createVapor() {
+        const v = document.createElement('div');
+        v.className = 'vapor';
+        v.style.left = Math.random() * 90 + 5 + '%';
+        v.style.display = 'block';
+        scene.appendChild(v);
+        
+        let pos = 25;
+        const anim = setInterval(() => {
+            if (pos > 80) {
+                v.remove();
+                clearInterval(anim);
             } else {
-                feedback.textContent = 'اشتباه است! 😔';
-                feedback.style.color = 'red';
+                pos += 0.5;
+                v.style.bottom = pos + '%';
+                v.style.opacity = (80 - pos) / 55;
             }
-            document.getElementById('nextBtn').style.display = 'block';
+        }, 30);
+    }
+
+    function startRain() {
+        rainInterval = setInterval(() => {
+            const drop = document.createElement('div');
+            drop.className = 'rain-drop';
+            drop.style.left = Math.random() * 80 + 10 + '%';
+            drop.style.top = '100px';
+            drop.style.display = 'block';
+            scene.appendChild(drop);
+            
+            let pos = 100;
+            const anim = setInterval(() => {
+                if (pos > 300) {
+                    drop.remove();
+                    clearInterval(anim);
+                } else {
+                    pos += 5;
+                    drop.style.top = pos + 'px';
+                }
+            }, 20);
+        }, 100);
+    }
+
+    function stopRain() {
+        clearInterval(rainInterval);
+        document.querySelectorAll('.rain-drop').forEach(d => d.remove());
+    }
+
+    // --- Quiz Logic ---
+    const questions = [
+        { q: "خورشید باعث کدام مرحله از چرخه آب می‌شود؟", options: ["تبخیر", "بارش", "سرد شدن"], correct: 0 },
+        { q: "وقتی بخار آب در آسمان سرد می‌شود چه چیزی ساخته می‌شود؟", options: ["خورشید", "ابر", "رودخانه"], correct: 1 },
+        { q: "آب به چه شکلی از آسمان به زمین برمی‌گردد؟", options: ["فقط باران", "بخار", "باران، برف یا تگرگ"], correct: 2 },
+        { q: "آیا مقدار آب روی زمین همیشه در حال تغییر و جابجایی است؟", options: ["بله", "خیر", "فقط در تابستان"], correct: 0 },
+        { q: "کدام کلمه یعنی تبدیل بخار به ابر؟", options: ["تبخیر", "میعان", "ذوب شدن"], correct: 1 }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    function showQuiz() {
+        document.getElementById('quiz-section').style.display = 'block';
+        document.getElementById('quiz-content').style.display = 'block';
+        document.getElementById('result-area').style.display = 'none';
+        currentQ = 0;
+        score = 0;
+        loadQuestion();
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function loadQuestion() {
+        const q = questions[currentQ];
+        document.getElementById('q-text').innerText = `سوال ${currentQ + 1}: ${q.q}`;
+        const optionsBox = document.getElementById('q-options');
+        optionsBox.innerHTML = '';
+        
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index, btn);
+            optionsBox.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(idx, btn) {
+        const correctIdx = questions[currentQ].correct;
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(b => b.disabled = true);
+
+        if (idx === correctIdx) {
+            btn.classList.add('correct');
+            score++;
+            playBeep(true);
+        } else {
+            btn.classList.add('wrong');
+            allBtns[correctIdx].classList.add('correct');
+            playBeep(false);
         }
 
-        function nextQuestion() {
-            document.getElementById(`question${currentQuestion}`).classList.remove('active');
-            currentQuestion++;
-            if (currentQuestion <= totalQuestions) {
-                document.getElementById(`question${currentQuestion}`).classList.add('active');
+        setTimeout(() => {
+            currentQ++;
+            if (currentQ < questions.length) {
+                loadQuestion();
             } else {
-                showScore();
+                showFinalResult();
             }
-            document.getElementById('nextBtn').style.display = 'none';
-        }
+        }, 1500);
+    }
 
-        function showScore() {
-            const stars = document.getElementById('score');
-            for (let i = 1; i <= 5; i++) {
-                stars.textContent += (i <= score) ? '★' : '☆';
-            }
-            document.getElementById('resetBtn').style.display = 'block';
+    function showFinalResult() {
+        document.getElementById('quiz-content').style.display = 'none';
+        const resultArea = document.getElementById('result-area');
+        resultArea.style.display = 'block';
+        
+        const starsBox = document.getElementById('stars');
+        starsBox.innerHTML = '';
+        for (let i = 1; i <= 5; i++) {
+            const span = document.createElement('span');
+            span.innerHTML = '★';
+            if (i <= score) span.className = 'filled';
+            starsBox.appendChild(span);
         }
+        
+        document.getElementById('score-text').innerText = `آفرین قهرمان! تو به ${score} سوال از ۵ سوال پاسخ درست دادی.`;
+    }
 
-        function resetQuiz() {
-            currentQuestion = 1;
-            score = 0;
-            document.getElementById('score').textContent = '';
-            for (let i = 1; i <= totalQuestions; i++) {
-                document.getElementById(`question${i}`).classList.remove('active');
-                document.getElementById(`feedback${i}`).textContent = '';
-            }
-            document.getElementById('question1').classList.add('active');
-            document.getElementById('resetBtn').style.display = 'none';
-        }
+    function resetAll() {
+        score = 0;
+        currentQ = 0;
+        document.getElementById('quiz-section').style.display = 'none';
+        document.getElementById('cloud1').style.left = '-150px';
+        document.getElementById('cloud2').style.left = '-200px';
+        document.querySelectorAll('.btn-step').forEach(b => b.classList.remove('active'));
+        infoText.innerHTML = "روی مرحله اول کلیک کن تا سفر آب شروع بشه!";
+        stopRain();
+        window.scrollTo(0, 0);
+    }
+</script>
 
-        function playBeep() {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioCtx.createOscillator();
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 note
-            oscillator.connect(audioCtx.destination);
-            oscillator.start();
-            setTimeout(() => oscillator.stop(), 200);
-        }
-    </script>
 </body>
 </html>
